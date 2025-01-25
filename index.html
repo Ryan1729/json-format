@@ -1,0 +1,98 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <!-- Important for screen size responsiveness! -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>JSON format</title><style type="text/css">
+* {
+    font-family: monospace;
+}
+        
+html, .full-h {
+    height: 100%;
+}
+
+body{
+    margin: 0 0;
+    line-height:1.6;
+    font-size:18px;
+    color:#eee;
+    background-color:#111;
+    padding: 0 10px;
+}
+    
+/* container */
+.responsive-two-column-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+}
+
+.input-wrapper {
+    margin: 0 10px;
+}
+.output-wrapper {
+    margin: 0 10px;
+    border: 1px solid #888;
+}
+
+#input, #output {
+    color:#eee;
+    background-color:#111;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#output {
+    white-space: pre;
+}
+
+/* tablet breakpoint */
+@media (min-width:768px) {
+    .responsive-two-column-grid {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style></head>
+<body class="full-h">
+<div class="responsive-two-column-grid full-h">
+    <div class="input-wrapper full-h">
+        <textarea id="input" placeholder="{}"></textarea>
+    </div>
+    <div class="output-wrapper full-h">
+        <output id="output"></output>
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+const input = document.getElementById("input");
+const output = document.getElementById("output");
+
+input.oninput = () => {
+    let parsed;
+    try {
+        parsed = JSON.parse(input.value);
+    } catch (e) {
+        parsed = null;
+    }
+     
+    if (parsed) {
+        output.value = JSON.stringify(parsed, null, 4);
+    } else {
+        // TODO indicate error state
+        output.value = input.value;
+    }
+    
+};
+
+</script>
+
+</html>
