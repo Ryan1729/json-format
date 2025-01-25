@@ -9,7 +9,7 @@
 * {
     font-family: monospace;
 }
-        
+
 html, .full-h {
     height: 100%;
 }
@@ -22,7 +22,7 @@ body{
     background-color:#111;
     padding: 0 10px;
 }
-    
+
 /* container */
 .responsive-two-column-grid {
     display: grid;
@@ -47,6 +47,7 @@ body{
 }
 
 #output {
+    display: block;
     white-space: pre;
 }
 
@@ -62,9 +63,11 @@ body{
 <body class="full-h">
 <div class="responsive-two-column-grid full-h">
     <div class="input-wrapper full-h">
+        <button id="input-copy-button">📋</button>
         <textarea id="input" placeholder="{}"></textarea>
     </div>
     <div class="output-wrapper full-h">
+        <button id="output-copy-button">📋</button>
         <output id="output"></output>
     </div>
 </div>
@@ -83,15 +86,43 @@ input.oninput = () => {
     } catch (e) {
         parsed = null;
     }
-     
+
     if (parsed) {
         output.value = JSON.stringify(parsed, null, 4);
     } else {
         // TODO indicate error state
         output.value = input.value;
     }
-    
+
 };
+
+async function writeClipboardText(text) {
+try {
+  await navigator.clipboard.writeText(text);
+} catch (error) {
+  console.error(error.message);
+}
+}
+
+const setupClipboardButton = (id, getTextFn) => {
+    const copyButton = document.getElementById(id);
+    copyButton.addEventListener("click", () => {
+        writeClipboardText(getTextFn()).then(() => {
+          copyButton.disabled = true;
+          copyButton.innerText = "✅";
+          setTimeout(
+            () => {
+              copyButton.innerText = "📋";
+              copyButton.disabled = false;
+            },
+            16 * 30
+          )
+        });
+    });
+}
+
+setupClipboardButton("input-copy-button", () => input.value);
+setupClipboardButton("output-copy-button", () => output.value);
 
 </script>
 
